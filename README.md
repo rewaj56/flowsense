@@ -2,6 +2,7 @@
 # FlowSense
 
 FlowSense is a Laravel package that provides detailed route information. It includes a middleware that adds a floating button on your web pages to display the current route's details, such as URI, controller, and method.
+With just one click, you can see detailed information about the current route, including the URI, controller, and method. It's great for both new developers navigating a big codebase and experienced developers who want quick access to route details without switching between files.
 
 
 ## Features
