@@ -1,0 +1,25 @@
+{
+    "name": "rewaj56/flowsense",
+    "description": "FlowSense - A simple Laravel package.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rewaj56\\Flowsense\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rewaj56\\Flowsense\\Providers\\FlowSenseServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Rewaj Gautam"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
