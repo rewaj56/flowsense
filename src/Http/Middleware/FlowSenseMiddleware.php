@@ -4,12 +4,25 @@ namespace Rewaj56\Flowsense\Http\Middleware;
 
 use Closure;
 use Rewaj56\Flowsense\FlowInfo;
+use Illuminate\Support\Facades\DB;
 
 class FlowSenseMiddleware
 {
     public function handle($request, Closure $next)
     {
+        DB::enableQueryLog();
+
+        $startTime = microtime(true);
+
         $response = $next($request);
+
+        $endTime = microtime(true);
+
+        $responseTime = number_format($endTime - $startTime, 4);
+
+        $queries = DB::getQueryLog();
+        $totalQueryDuration = array_sum(array_column($queries, 'time'));
+        // dd($totalQueryDuration, $queries);
 
         $flowInfo = new FlowInfo();
         $routeInfo = $flowInfo->displayRouteInfo();
@@ -44,9 +57,27 @@ class FlowSenseMiddleware
                 box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
                 display: none;
                 z-index: 999;
+                box-sizing: border-box;
+            }
+            #flowSenseInfo > div {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #flowSenseInfo .column {
+                flex: 1;
+                min-width: 200px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            #flowSenseInfo .column:first-child {
+                background-color: #444;
+                margin-left: 3rem;
+            }
+            #flowSenseInfo .column:last-child {
+                background-color: #494949  ;
             }
             #flowSenseInfo > p {
-                margin-left: 5rem;
+                margin: 0.5rem 0;
             }
         </style>
 
@@ -54,7 +85,17 @@ class FlowSenseMiddleware
 
         <div id="flowSenseInfo">
             <h4><i>flowsense</i></h4>
-            <p>{$routeInfo}</p>
+            <div>
+                <div class="column">
+                    <p><strong>Route:</strong> {$routeInfo['route']}</p>
+                    <p><strong>Controller:</strong> {$routeInfo['controller']}</p>
+                    <p><strong>Method:</strong> {$routeInfo['method']}</p>
+                </div>
+                <div class="column">
+                    <p><strong>Response Time:</strong> {$responseTime} seconds</p>
+                    <p><strong>Total Query Time:</strong> {$totalQueryDuration} seconds</p>
+                </div>
+            </div>
         </div>
 
         <script>
@@ -77,3 +118,4 @@ class FlowSenseMiddleware
         return $response;
     }
 }
+

@@ -33,8 +33,6 @@ class FlowInfo
 
     public function displayRouteInfo()
     {
-        $info = $this->getCurrentRouteInfo();
-        // dd($info);
-        return "Route: {$info['route']} &nbsp;&nbsp;&nbsp; Controller: {$info['controller']} &nbsp;&nbsp;&nbsp; Method: {$info['method']}";
+        return $this->getCurrentRouteInfo();
     }
 }
