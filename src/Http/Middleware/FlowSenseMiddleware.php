@@ -3,33 +3,53 @@
 namespace Rewaj56\Flowsense\Http\Middleware;
 
 use Closure;
-use Rewaj56\Flowsense\FlowInfo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
+use Rewaj56\Flowsense\FlowInfo;
+use Rewaj56\Flowsense\Services\FlowSenseService;
 
 class FlowSenseMiddleware
 {
+    protected $flowSenseService;
+
+    public function __construct(FlowSenseService $flowSenseService)
+    {
+        $this->flowSenseService = $flowSenseService;
+    }
+
     public function handle($request, Closure $next)
     {
         DB::enableQueryLog();
+        View::composer('*', function ($view) {
+            $this->flowSenseService->addViewPath($view->getPath());
+        });
 
         $startTime = microtime(true);
-
         $response = $next($request);
-
         $endTime = microtime(true);
 
         $responseTime = number_format($endTime - $startTime, 4);
+        $totalQueryDuration = $this->getTotalQueryDuration();
 
-        $queries = DB::getQueryLog();
-        $totalQueryDuration = array_sum(array_column($queries, 'time'));
-        // dd($totalQueryDuration, $queries);
-
-        $flowInfo = new FlowInfo();
-        $routeInfo = $flowInfo->displayRouteInfo();
+        $routeInfo = $this->flowSenseService->getRouteInfo();
+        $viewPathsHtml = $this->flowSenseService->formatViewPaths($routeInfo['view_paths']);
 
         $content = $response->getContent();
+        $content .= $this->generateHtml($routeInfo, $responseTime, $totalQueryDuration, $viewPathsHtml);
+        $response->setContent($content);
 
-        $content .= <<<HTML
+        return $response;
+    }
+
+    protected function getTotalQueryDuration()
+    {
+        $queries = DB::getQueryLog();
+        return array_sum(array_column($queries, 'time'));
+    }
+
+    protected function generateHtml($routeInfo, $responseTime, $totalQueryDuration, $viewPathsHtml)
+    {
+        return <<<HTML
         <style>
             #flowSenseBtn {
                 position: fixed;
@@ -90,10 +110,14 @@ class FlowSenseMiddleware
                     <p><strong>Route:</strong> {$routeInfo['route']}</p>
                     <p><strong>Controller:</strong> {$routeInfo['controller']}</p>
                     <p><strong>Method:</strong> {$routeInfo['method']}</p>
-                </div>
-                <div class="column">
                     <p><strong>Response Time:</strong> {$responseTime} seconds</p>
                     <p><strong>Total Query Time:</strong> {$totalQueryDuration} seconds</p>
+                </div>
+                <div class="column">
+                    <p><strong>View Paths:</strong></p>
+                    <ul>
+                        {$viewPathsHtml}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -113,9 +137,5 @@ class FlowSenseMiddleware
             });
         </script>
         HTML;
-
-        $response->setContent($content);
-        return $response;
     }
 }
-
