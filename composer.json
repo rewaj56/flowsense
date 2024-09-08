@@ -1,6 +1,6 @@
 {
     "name": "rewaj56/flowsense",
-    "description": "FlowSense - A simple Laravel package.",
+    "description": "FlowSense - Route Details Instantly.",
     "type": "project",
     "license": "MIT",
     "autoload": {
