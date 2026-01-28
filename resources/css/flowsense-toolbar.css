@@ -1,0 +1,177 @@
+/* ========== FlowSense Toolbar ========== */
+#flowsense-toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  z-index: 9999;
+  background: #2b2b2b;
+  color: #fff;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+/* Collapsed state: leave handle visible */
+#flowsense-toolbar.collapsed {
+  transform: translateY(calc(100% - 3rem));
+}
+
+/* Header */
+#flowsense-toolbar .fs-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #222;
+  border-top: 3px solid #f05340;
+  cursor: pointer;
+}
+
+/* Toggle arrow */
+#flowsense-toolbar .fs-toggle {
+  margin-right: 1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+/* Tabs */
+#flowsense-toolbar .fs-tab {
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px 3px 0 0;
+  background: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#flowsense-toolbar .fs-tab.active,
+#flowsense-toolbar .fs-tab:hover {
+  background: #f05340;
+}
+
+/* Panels */
+#flowsense-toolbar .fs-panel {
+  display: none;
+  padding: 0.5rem 1rem;
+  max-height: 350px;
+  overflow-y: auto;
+  background: #2b2b2b;
+}
+
+#flowsense-toolbar .fs-panel.active {
+  display: block;
+}
+
+/* Table styles */
+#flowsense-toolbar table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#flowsense-toolbar th,
+#flowsense-toolbar td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #444;
+}
+
+#flowsense-toolbar th {
+  background: #333;
+  text-align: left;
+}
+
+/* Slow query highlight */
+.fs-query-row.slow td {
+  background: #5a1a1a;
+  color: #ff6666;
+}
+
+/* Expandable SQL */
+.fs-query-details {
+  display: none;
+  background: #1a1a1a;
+  padding: 4px 6px;
+  margin-top: 2px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.fs-query-row:hover {
+  background: #3a3a3a;
+  cursor: pointer;
+}
+
+.fs-view-data {
+  background: #2a2a3a;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-left: 3px solid #f05340;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+.fs-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2c2c3c;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  border-left: 3px solid #f05340;
+  border-radius: 4px 4px 0 0;
+  transition: background 0.2s;
+}
+
+.fs-view-header:hover {
+  background: #f05340;
+  color: #fff;
+}
+
+.fs-view-header span:first-child {
+  font-weight: 500;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-view-toggle-icon {
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.fs-view-toggle-icon.open {
+  transform: rotate(90deg);
+}
+
+.fs-view-data {
+  background: #2a2a3a;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid #f05340;
+  border-radius: 0 0 4px 4px;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  display: none;
+  overflow-x: auto;
+  margin-bottom: 0.5rem;
+}
+
+pre {
+  color: wheat !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #flowsense-toolbar .fs-header {
+    flex-wrap: wrap;
+  }
+
+  #flowsense-toolbar .fs-tab {
+    margin-bottom: 0.25rem;
+  }
+}
